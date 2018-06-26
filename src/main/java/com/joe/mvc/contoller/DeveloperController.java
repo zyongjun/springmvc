@@ -5,9 +5,8 @@ import com.joe.mvc.model.DeveloperModel;
 import com.joe.mvc.dao.DeveloperDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -55,9 +54,26 @@ public class DeveloperController {
         return result;
     }
 
-    @RequestMapping(value = "/api/update",method = RequestMethod.GET)
+    @RequestMapping(value = "api/add", method = RequestMethod.POST)
     @ResponseBody
-    public CommonModel updateDeveloper(String id,String name,String site){
+    public CommonModel addDeveloper(DeveloperModel developer) {
+        System.out.println("--------developer  add:"+developer.toString());
+        CommonModel commonModel = new CommonModel();
+        if (developerDao.addDeveloper(developer)) {
+            commonModel.setSuccess();
+            commonModel.setData(developer);
+        }else{
+            commonModel.setFail();
+        }
+        return commonModel;
+    }
+
+    @RequestMapping(value = "/api/update",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonModel updateDeveloper(@RequestParam(value = "id") String id,
+                                       @RequestParam(value = "name") String name,
+                                       @RequestParam(value = "site",required = false) String site){
+        System.out.println("-----id:"+id+"--------------name:"+name+"------site:"+site);
         CommonModel result = new CommonModel();
         if (developerDao.updateDeveloper(id, name, site)) {
             result.setSuccess();
@@ -68,9 +84,9 @@ public class DeveloperController {
         return result;
     }
 
-    @RequestMapping(value = "/api/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/delete", method = RequestMethod.POST)
     @ResponseBody
-    public CommonModel deleteDeveloper(String id) {
+    public CommonModel deleteDeveloper(@RequestParam(value = "id") String id) {
         CommonModel result = new CommonModel();
         if (developerDao.deleteDeveloper(id)) {
             result.setData(true);

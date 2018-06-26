@@ -31,20 +31,38 @@ public class DeveloperDaoImpl implements DeveloperDao{
     }
 
     @Override
+    public boolean addDeveloper(DeveloperModel model) {
+        try {
+            String sql = "INSERT INTO developer(name,site,avatar) VALUES(" +
+                    "'" + model.getName() + "','" + model.getSite() + "','" + model.getAvatar() + "'" +
+                    ")";
+            System.out.println("add sql =="+sql);
+            jdbcTemplate.execute(sql);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public boolean updateDeveloper(String id, String name, String site) {
         try {
             String sql = "UPDATE developer SET ";
             if (name != null) {
-                sql += "name = '"+name+"' ";
+                sql += "name = '"+name+"', ";
             }
             if (site != null) {
                 sql += "site = '"+site+"' ";
+            }
+            if(sql.trim().endsWith(",")){
+                sql=sql.substring(0,sql.lastIndexOf(",")).trim()+" ";
             }
             sql+= "where id="+id;
             jdbcTemplate.update(sql);
             return true;
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return false;
     }
@@ -56,7 +74,7 @@ public class DeveloperDaoImpl implements DeveloperDao{
             jdbcTemplate.execute(sql);
             return true;
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return false;
     }

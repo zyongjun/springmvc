@@ -10,6 +10,8 @@ public interface DeveloperDao {
 
     DeveloperModel getDeveloper(String id);
 
+    boolean addDeveloper(DeveloperModel model);
+
     boolean updateDeveloper(String id, String name,String site);
 
     boolean deleteDeveloper(String id);
